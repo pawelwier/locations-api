@@ -1,6 +1,7 @@
-import express, { Express, Request, Response } from 'express'
+import express, { Express, json, Request, Response } from 'express'
 import dotenv from 'dotenv'
 import { makeConnection } from './connection'
+import { locationRouter } from './routers/locationRouter'
 
 dotenv.config()
 
@@ -11,10 +12,14 @@ const uri: string = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.M
 
 makeConnection(uri as string)
 
+app.use(json())
+
 app.get('/test', (req: Request, res: Response) => {
   console.log('test')
   res.send({ test: 'OK' })
 })
+
+app.use('/location', locationRouter)
 
 app.listen(port, () => {
   console.log('Server running on port:', port)
